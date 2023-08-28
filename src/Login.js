@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from './img/logo.svg'
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -11,7 +12,11 @@ const Login = () => {
   return (
 <div className="row">
         <div className="col-md-6 p-0" style={{ backgroundColor: '#D8F3DC', height: '100vh' }}>
-          {/* Lado Esquerdo */}
+          <div className="d-flex flex-column justify-content-center align-items-center h-100">
+            <h1 style={{color: 'black', fontSize: 50, fontFamily: 'Inter', fontWeight: '400', wordWrap: 'break-word'}}>A R B O R E T T O</h1>
+            <img src={logo} alt="Logo(Árvore)" width="450" height="300" margin-right="145"/>
+            <div style={{width: 648.01, height: 0, border: '0.50px rgba(170, 170, 170, 0.80) solid'}}></div>
+          </div>
         </div>
         <div className="col-md-6">
           <div className="d-flex justify-content-center align-items-center h-100">
