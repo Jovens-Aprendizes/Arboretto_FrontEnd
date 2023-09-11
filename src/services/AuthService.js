@@ -3,12 +3,12 @@ class AuthService {
     async login(cpf, password) {
       try {
         // Chame a API para autenticar o usuário (substitua 'apiEndpoint' pelo seu URL real)
-        const response = await fetch('apiEndpoint/auth/login', {
-          method: 'POST',
+        const response = await fetch('http://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login', {
+          method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
+            "cpf":cpf, "senha":password
           },
-          body: JSON.stringify({ cpf, password }),
+          // body: JSON.stringify({ cpf, password }),
         });
   
         if (response.ok) {

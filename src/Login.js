@@ -1,12 +1,27 @@
 import React, { useState } from 'react';
+import AuthService from './services/AuthService';
 import logo from './img/logo.svg'
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Implemente a lógica de autenticação aqui
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  const handleLogin = async () => {
+    const loggedIn = await AuthService.login(username, password);
+
+    if (loggedIn) {
+      // Obtenha informações sobre o usuário logado, se disponíveis
+      const user = await AuthService.getLoggedInUser(); // Implemente essa função no seu serviço de autenticação
+
+      if (user) {
+        setLoggedInUser(user); // Armazene as informações do usuário no estado
+        alert(`Usuário logado: ${user.username}`);
+      }
+    } else {
+      alert('Login falhou');
+    }
   };
 
   return (
