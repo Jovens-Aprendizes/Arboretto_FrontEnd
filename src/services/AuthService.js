@@ -5,7 +5,7 @@ class AuthService {
     try {
       // Chame a API para autenticar o usuário (substitua 'apiEndpoint' pelo seu URL real)
       const response = await axios.get(
-        "http://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login",
+        "https://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login",
         {
           headers: {
             cpf: cpf,
