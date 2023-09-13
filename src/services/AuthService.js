@@ -5,7 +5,7 @@ class AuthService {
     try {
       // Chame a API para autenticar o usuário (substitua 'apiEndpoint' pelo seu URL real)
       const response = await axios.get(
-        "https://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login",
+        "http://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login",
         {
           headers: {
             cpf: cpf,
@@ -14,10 +14,10 @@ class AuthService {
           // body: JSON.stringify({ cpf, password }),
         }
       );
-
-     if(response) {
-const data = response.data
-localstorage.setItem("user", JSON.stringfy(data))
+      console.log(response);
+      if (response) {
+        const data = response.data;
+        localStorage.setItem("user", JSON.stringify(data));
 
         return true; // Login bem-sucedido
       } else {
@@ -31,12 +31,12 @@ localstorage.setItem("user", JSON.stringfy(data))
 
   logout() {
     // Remova o token de autenticação (se necessário)
-    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   }
 
   isAuthenticated() {
     // Verifique se o usuário está autenticado com base no token (ou outras verificações)
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("user");
     return !!token; // Retorna true se o token existir
   }
 }
