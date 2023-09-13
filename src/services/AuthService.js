@@ -18,7 +18,7 @@ class AuthService {
      if(response) {
 const data = response.data
 localstorage.setItem("user", JSON.stringfy(data))
-}
+
         return true; // Login bem-sucedido
       } else {
         return false; // Falha no login
