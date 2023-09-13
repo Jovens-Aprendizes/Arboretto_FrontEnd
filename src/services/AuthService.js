@@ -15,10 +15,10 @@ class AuthService {
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        // Armazene o token de autenticação em localStorage ou cookies
-        localStorage.setItem("token", data.token);
+     if(response) {
+const data = response.data
+localstorage.setItem("user", JSON.stringfy(data))
+}
         return true; // Login bem-sucedido
       } else {
         return false; // Falha no login
