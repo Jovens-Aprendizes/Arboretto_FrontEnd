@@ -6,8 +6,6 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loggedInUser, setLoggedInUser] = useState(null);
-
   const handleLogin = async () => {
     const loggedIn = await AuthService.login(username, password);
 
@@ -16,7 +14,7 @@ const Login = () => {
       const user = await AuthService.isAuthenticated(); // Implemente essa função no seu serviço de autenticação
 
       if (user) {
-        setLoggedInUser(user); // Armazene as informações do usuário no estado
+        // Armazene as informações do usuário no estado
         alert(`Usuário logado: ${user}`);
       }
     } else {
