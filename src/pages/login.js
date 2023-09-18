@@ -10,6 +10,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     const loggedIn = await login(username, password);
+    console.log(username, password)
     
     if (loggedIn && isAuthenticated()) {
       alert(`Usuário logado`);
