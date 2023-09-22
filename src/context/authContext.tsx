@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
           }
         })
         .then((response) => {
-          if (response.data.isValid) {
+          if (response.data.id) {
             setUser(response.data.user);
           } else {
             destroyCookie(undefined, "arboretto-token");
@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
           }
         })
         .then((response) => {
-          if (response.data.isValid) {
+          if (response.data.id) {
             setUser(response.data.user);
             setCookie(undefined, "arboretto-token", token, {
               maxAge: 60 * 60 * 24 * 30, // 30 days
