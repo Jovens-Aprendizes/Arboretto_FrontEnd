@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
 
     if (token) {
       axios
-        .post(process.env.NEXT_PUBLIC_AUTH_URL || 'https://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login' , { token: token },{
+        .post(process.env.NEXT_PUBLIC_AUTH_URL || 'https://api-arboretto-production-59fe.up.railway.app/api-arboretto-dev/v1/usuario/login' , { token: token },{
           headers:{
             "Content-Type": 'application/json',
             "Accept": "*/*"
@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
   async function signIn({ cpf, senha }: Credentials) {
     try {
       const token = btoa(JSON.stringify({ cpf: cpf, senha: senha }));
-      axios.post(process.env.NEXT_PUBLIC_AUTH_URL || 'https://arborettoapi.azurewebsites.net/api-arboretto-dev/v1/usuario/login' , {
+      axios.post(process.env.NEXT_PUBLIC_AUTH_URL || 'https://api-arboretto-production-59fe.up.railway.app/api-arboretto-dev/v1/usuario/login' , {
           token: token,
         },{
           headers:{
