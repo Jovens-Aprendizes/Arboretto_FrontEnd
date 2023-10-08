@@ -79,7 +79,7 @@ export function AuthProvider({ children }) {
         })
         .then((response) => {
           if (response.data.id) {
-            setUser(response.data.user);
+            setUser(response.data);
             setCookie(undefined, "arboretto-token", token, {
               maxAge: 60 * 60 * 24 * 30, // 30 days
             });
