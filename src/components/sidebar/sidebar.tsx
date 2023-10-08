@@ -18,12 +18,52 @@ import {
 } from "@chakra-ui/react";
 import { BsMoonFill, BsSun } from "react-icons/bs";
 import { FiChevronDown } from "react-icons/fi";
-import { AuthContext } from "../../context/authContext";
-import { Logo } from "../login/Logo";
+import { AuthContext, CargoEnum, CargoType } from "../../context/authContext";
+
+type Link = {
+  name: string;
+  path: string;
+  role: CargoType[];
+};
+
+const PagesMap: Link[] = [
+  {
+    name: "Inicio",
+    path: "/home",
+    role: [
+      CargoEnum.ADMINISTRADOR,
+      CargoEnum.PROPRIETARIO,
+      CargoEnum.INQUILINO,
+    ],
+  },
+  {
+    name: "Cadastro",
+    path: "/cadastro",
+    role: [CargoEnum.ADMINISTRADOR],
+  },
+  {
+    name: "Solicitações",
+    path: "/solicitacoes",
+    role: [CargoEnum.ADMINISTRADOR],
+  },
+  {
+    name: "Agendar",
+    path: "/agendar",
+    role: [CargoEnum.INQUILINO, CargoEnum.PROPRIETARIO],
+  },
+  {
+    name: "Minhas Solicitações",
+    path: "/minhas-solicitacoes",
+    role: [CargoEnum.INQUILINO, CargoEnum.PROPRIETARIO],
+  },
+];
 
 export default function Navbar({ children }) {
   const { user, logout } = useContext(AuthContext);
   const { colorMode, toggleColorMode } = useColorMode();
+  const mappedPages = PagesMap.filter((page) =>
+    page.role.includes(user?.cargo)
+  );
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <Flex
@@ -40,6 +80,16 @@ export default function Navbar({ children }) {
           <Heading fontSize="18" fontFamily="Inter" fontWeight="400" mt="3">
             A R B O R E T T O
           </Heading>
+        </Flex>
+
+        <Flex flexDirection="row" align="left" gap={6}>
+          {mappedPages.map((page) => (
+            <a href={page.path} key={page.name}>
+              <Heading fontSize="18" fontFamily="Inter" fontWeight="500" mt="2">
+                {page.name}
+              </Heading>
+            </a>
+          ))}
         </Flex>
         <HStack spacing={{ base: "0", md: "6" }}>
           <IconButton

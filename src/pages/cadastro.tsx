@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
 
-const Home = () => {
+const Cadastro = () => {
 
 
   return (
@@ -12,7 +12,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Cadastro;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { "arboretto-token": token } = parseCookies(ctx);

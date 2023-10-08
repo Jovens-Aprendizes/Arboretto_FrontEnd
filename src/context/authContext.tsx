@@ -10,9 +10,17 @@ type User = {
   email: string;
   numeroApartamento: string;
   bloco: string;
-  cargo: 'inquilino' | 'administrador' | 'proprietário';
+  cargo: CargoType;
   dataNascimento: string;
 };
+
+export enum CargoEnum {
+  INQUILINO = 'inquilino',
+  ADMINISTRADOR = 'administrador',
+  PROPRIETARIO = 'proprietário',
+}
+
+export type CargoType = (typeof CargoEnum)[keyof typeof CargoEnum];
 
 type Credentials = {
   cpf: string;
