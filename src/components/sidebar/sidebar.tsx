@@ -24,7 +24,6 @@ import { Logo } from "../login/Logo";
 export default function Navbar({ children }) {
   const { user, logout } = useContext(AuthContext);
   const { colorMode, toggleColorMode } = useColorMode();
-
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <Flex
@@ -34,25 +33,14 @@ export default function Navbar({ children }) {
         bg={useColorModeValue("white", "gray.900")}
         borderBottomWidth="1px"
         borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-        justifyContent={{ base: "space-between", md: "flex-end" }}
+        justifyContent={{ base: "space-between" }}
       >
-        <Text
-          fontSize="16px"
-          fontFamily="monospace"
-          fontWeight="bold"
-        >
-          <Flex flexDirection="row" align="left">
-            <Logo viewBox="none" mt="16px" mr={3} width="50px" />
-            <Heading
-              fontSize="18"
-              fontFamily="Inter"
-              fontWeight="400"
-            >
-              A R B O R E T T O
-            </Heading>
-          </Flex>
-        </Text>
-
+        <Flex flexDirection="row" align="left">
+          <img src="/logo.png" alt="Logo(Árvore)" width="50px" />
+          <Heading fontSize="18" fontFamily="Inter" fontWeight="400" mt="3">
+            A R B O R E T T O
+          </Heading>
+        </Flex>
         <HStack spacing={{ base: "0", md: "6" }}>
           <IconButton
             onClick={toggleColorMode}

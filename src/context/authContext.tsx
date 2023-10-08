@@ -10,7 +10,7 @@ type User = {
   email: string;
   numeroApartamento: string;
   bloco: string;
-  cargo: string;
+  cargo: '';
   dataNascimento: string;
 };
 
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
         })
         .then((response) => {
           if (response.data.id) {
-            setUser(response.data.user);
+            setUser(response.data);
           } else {
             destroyCookie(undefined, "arboretto-token");
             Router.push("/");
