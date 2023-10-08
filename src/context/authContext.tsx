@@ -10,7 +10,7 @@ type User = {
   email: string;
   numeroApartamento: string;
   bloco: string;
-  cargo: '';
+  cargo: 'inquilino' | 'administrador' | 'proprietário';
   dataNascimento: string;
 };
 
