@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, VStack, Box, Center } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, VStack, Box, Center, Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 export default function MyForm() {
@@ -53,34 +53,37 @@ export default function MyForm() {
         boxShadow="0px 5px 16px 0px rgba(8, 15, 52, 0.06"
         p="20px"
       >
+
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired isInvalid={formErrors.nome} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
+              <Flex >
+                <FormLabel
+                  style={{
+                    color: "#170F49",
+                    fontFamily: "DM Sans",
+                    fontSize: "18px",
+                    fontWeight: 500,
+                    lineHeight: "20px",
+                  }}
+                >
                 NOME
-              </FormLabel>
-              <Input
-                type="text"
-                name="nome"
-                value={formData.nome}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
+                </FormLabel>
+                  <Input
+                    type="text"
+                    name="nome"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    style={{
+                      width: "284px",
+                      height: "66px",
+                      borderRadius: "5px",
+                      border: "1px solid #EFF0F6",
+                      background: "#FFF",
+                      boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
+                    }}
+                  />
+              </Flex>
             </FormControl>
 
             <FormControl isRequired isInvalid={formErrors.email} style={{ width: "284px", height: "66px" }}>
