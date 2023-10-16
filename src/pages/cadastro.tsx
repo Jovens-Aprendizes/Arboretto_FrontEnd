@@ -1,13 +1,12 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
+import Dados from "../components/dados/dados";
 
 const Cadastro = () => {
-
-
   return (
     <Navbar>
-
+      <Dados />
     </Navbar>
   );
 };

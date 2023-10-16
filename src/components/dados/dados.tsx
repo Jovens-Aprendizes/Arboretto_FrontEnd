@@ -1,293 +1,120 @@
-import { Button, FormControl, FormLabel, Input, VStack, Box, Center, Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  useToast,
+} from "@chakra-ui/react";
+
+export type UserForm = {
+  nome: string;
+  email: string;
+  cpf: string;
+  confirmarEmail: string;
+  bloco: string;
+  senha: string;
+  apto: string;
+  confirmarSenha: string;
+};
+
+const formFields = [
+  { name: "nome", label: "NOME", type: "text" },
+  { name: "cpf", label: "CPF", type: "text" },
+  { name: "email", label: "E-MAIL", type: "email" },
+  { name: "confirmarEmail", label: "CONFIRME SEU E-MAIL", type: "email" },
+  { name: "bloco", label: "BLOCO", type: "text" },
+  { name: "apto", label: "APTO", type: "text" },
+  { name: "senha", label: "SENHA", type: "password" },
+  { name: "confirmarSenha", label: "CONFIRME SUA SENHA", type: "password" },
+];
 
 export default function MyForm() {
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    cpf: "",
-    confirmarEmail: "",
-    bloco: "",
-    senha: "",
-    apto: "",
-    confirmarSenha: "",
-  });
-
+  const [formData, setFormData] = useState<UserForm>({} as UserForm);
   const [formErrors, setFormErrors] = useState({});
+  const toast = useToast();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFormErrors({});
+    const errors = {} as any;
 
-    const requiredFields = ["nome", "email", "confirmarEmail", "bloco", "senha", "confirmarSenha"];
-    const errors = {};
-
-    requiredFields.forEach((field) => {
-      if (!formData[field]) {
-        errors[field] = "Campo obrigatório";
+    formFields.forEach(({ name }) => {
+      if (!formData[name]) {
+        errors[name] = "Campo obrigatório";
       }
     });
 
+    if (formData.email !== formData.confirmarEmail) {
+      errors.confirmarEmail = "Os e-mails não coincidem";
+    }
+
+    if (formData.senha !== formData.confirmarSenha) {
+      errors.confirmarSenha = "As senhas não coincidem";
+    }
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
+      toast({
+        title: "Erro ao enviar o formulário.",
+        description: "Por favor, corrija os erros antes de enviar novamente.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
       return;
     }
+
+    // ... Aqui você colocaria a lógica para enviar os dados do formulário, como uma chamada de API
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
+  const renderField = ({ name, label, type }) => (
+    <FormControl isRequired isInvalid={!!formErrors[name]} w="35%">
+      <FormLabel fontSize={14}>{label}</FormLabel>
+      <Input
+        backgroundColor="gray.200"
+        colorScheme="teal"
+        type={type}
+        name={name}
+        value={formData[name] || ""}
+        onChange={handleChange}
+      />
+      {formErrors[name] && (
+        <FormErrorMessage>{formErrors[name]}</FormErrorMessage>
+      )}
+    </FormControl>
+  );
+
   return (
-    <Center>
-      <Box
-        width="991px"
-        height="720px"
-        flexShrink="0"
-        borderRadius="34px"
-        border="1px solid #EFF0F6"
-        background="#C0C9DB"
-        boxShadow="0px 5px 16px 0px rgba(8, 15, 52, 0.06"
-        p="20px"
-      >
-
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={4}>
-            <FormControl isRequired isInvalid={formErrors.nome} style={{ width: "284px", height: "66px" }}>
-              <Flex >
-                <FormLabel
-                  style={{
-                    color: "#170F49",
-                    fontFamily: "DM Sans",
-                    fontSize: "18px",
-                    fontWeight: 500,
-                    lineHeight: "20px",
-                  }}
-                >
-                NOME
-                </FormLabel>
-                  <Input
-                    type="text"
-                    name="nome"
-                    value={formData.nome}
-                    onChange={handleChange}
-                    style={{
-                      width: "284px",
-                      height: "66px",
-                      borderRadius: "5px",
-                      border: "1px solid #EFF0F6",
-                      background: "#FFF",
-                      boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                    }}
-                  />
-              </Flex>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.email} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                E-MAIL
-              </FormLabel>
-              <Input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.cpf} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                CPF
-              </FormLabel>
-              <Input
-                type="text"
-                name="cpf"
-                value={formData.cpf}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.confirmarEmail} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                CONFIRME SEU E-MAIL
-              </FormLabel>
-              <Input
-                type="email"
-                name="confirmarEmail"
-                value={formData.confirmarEmail}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.bloco} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                BLOCO
-              </FormLabel>
-              <Input
-                type="text"
-                name="bloco"
-                value={formData.bloco}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.senha} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                SENHA
-              </FormLabel>
-              <Input
-                type="password"
-                name="senha"
-                value={formData.senha}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.apto} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                APTO
-              </FormLabel>
-              <Input
-                type="text"
-                name="apto"
-                value={formData.apto}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <FormControl isRequired isInvalid={formErrors.confirmarSenha} style={{ width: "284px", height: "66px" }}>
-              <FormLabel
-                style={{
-                  color: "#170F49",
-                  fontFamily: "DM Sans",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                }}
-              >
-                CONFIRME SUA SENHA
-              </FormLabel>
-              <Input
-                type="password"
-                name="confirmarSenha"
-                value={formData.confirmarSenha}
-                onChange={handleChange}
-                style={{
-                  width: "284px",
-                  height: "66px",
-                  borderRadius: "5px",
-                  border: "1px solid #EFF0F6",
-                  background: "#FFF",
-                  boxShadow: "0px 2px 6px 0px rgba(19, 18, 66, 0.07",
-                }}
-              />
-            </FormControl>
-
-            <Button colorScheme="teal" type="submit">
-              Confirmar
-            </Button>
-          </VStack>
-        </form>
-      </Box>
-    </Center>
+    <Box
+      w="100%"
+      padding="5%"
+      borderWidth={1}
+      borderRadius="lg"
+      boxShadow="lg"
+      bg="gray.50"
+    >
+      <form onSubmit={handleSubmit}>
+        <Flex flexDir="column" mb="5%">
+          <Flex flexWrap="wrap" justifyContent="space-around" mb="5%">
+            {formFields.map((field) => renderField(field))}
+          </Flex>
+          <Button colorScheme="teal" alignSelf="end" type="submit">
+            Confirmar
+          </Button>
+        </Flex>
+      </form>
+    </Box>
   );
 }

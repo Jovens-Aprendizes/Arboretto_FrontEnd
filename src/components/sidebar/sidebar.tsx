@@ -17,13 +17,10 @@ import {
   MenuList,
   useColorMode,
   Heading,
-} 
-
-from "@chakra-ui/react";
+} from "@chakra-ui/react";
 import { BsMoonFill, BsSun } from "react-icons/bs";
 import { FiChevronDown } from "react-icons/fi";
 import { AuthContext, CargoEnum, CargoType } from "../../context/authContext";
-
 
 type Link = {
   name: string;
@@ -63,11 +60,12 @@ const PagesMap: Link[] = [
   },
 ];
 
-
 export default function Navbar({ children }) {
   const { user, logout } = useContext(AuthContext);
   const { colorMode, toggleColorMode } = useColorMode();
-  const mappedPages = PagesMap.filter((page) => page.role.includes(user?.cargo));
+  const mappedPages = PagesMap.filter((page) =>
+    page.role.includes(user?.cargo)
+  );
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -89,8 +87,19 @@ export default function Navbar({ children }) {
 
         <Flex flexDirection="row" align="left" gap={6}>
           {mappedPages.map((page) => (
-            <a href={page.path} key={page.name} style= {{}}>
-              <Heading marginLeft="50" marginRight="50" textDecoration="none" color= "#404245" textAlign= "center" fontFamily= "Inter" fontSize= "25" fontStyle= "normal" fontWeight= "600" lineHeight= "normal" >
+            <a href={page.path} key={page.name} style={{}}>
+              <Heading
+                marginLeft="50"
+                marginRight="50"
+                textDecoration="none"
+                color="#404245"
+                textAlign="center"
+                fontFamily="Inter"
+                fontSize="25"
+                fontStyle="normal"
+                fontWeight="600"
+                lineHeight="normal"
+              >
                 {page.name}
               </Heading>
             </a>
@@ -142,7 +151,7 @@ export default function Navbar({ children }) {
           </Flex>
         </HStack>
       </Flex>
-      <Box p="4">{children}</Box>
+      <Box padding="15px">{children}</Box>
     </Box>
   );
 }
