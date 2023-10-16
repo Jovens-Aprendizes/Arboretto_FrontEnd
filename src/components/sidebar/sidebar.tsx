@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
+
 import {
   IconButton,
+  Link,
   Avatar,
   Box,
   Flex,
@@ -15,10 +17,13 @@ import {
   MenuList,
   useColorMode,
   Heading,
-} from "@chakra-ui/react";
+} 
+
+from "@chakra-ui/react";
 import { BsMoonFill, BsSun } from "react-icons/bs";
 import { FiChevronDown } from "react-icons/fi";
 import { AuthContext, CargoEnum, CargoType } from "../../context/authContext";
+
 
 type Link = {
   name: string;
@@ -58,19 +63,19 @@ const PagesMap: Link[] = [
   },
 ];
 
+
 export default function Navbar({ children }) {
   const { user, logout } = useContext(AuthContext);
   const { colorMode, toggleColorMode } = useColorMode();
-  const mappedPages = PagesMap.filter((page) =>
-    page.role.includes(user?.cargo)
-  );
+  const mappedPages = PagesMap.filter((page) => page.role.includes(user?.cargo));
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <Flex
         px={{ base: 4, md: 4 }}
         height="50"
         alignItems="center"
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue("#C0C9DB", "gray.900")}
         borderBottomWidth="1px"
         borderBottomColor={useColorModeValue("gray.200", "gray.700")}
         justifyContent={{ base: "space-between" }}
@@ -84,8 +89,8 @@ export default function Navbar({ children }) {
 
         <Flex flexDirection="row" align="left" gap={6}>
           {mappedPages.map((page) => (
-            <a href={page.path} key={page.name}>
-              <Heading fontSize="18" fontFamily="Inter" fontWeight="500" mt="2">
+            <a href={page.path} key={page.name} style= {{}}>
+              <Heading marginLeft="50" marginRight="50" textDecoration="none" color= "#404245" textAlign= "center" fontFamily= "Inter" fontSize= "25" fontStyle= "normal" fontWeight= "600" lineHeight= "normal" >
                 {page.name}
               </Heading>
             </a>
