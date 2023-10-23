@@ -1,12 +1,13 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
+import SolicitacoesAdm from "../components/solicitacoes/solicitacoes";
 
 const Solicitacoes = () => {
 
   return (
     <Navbar>
-
+      <SolicitacoesAdm/>
     </Navbar>
   );
 };

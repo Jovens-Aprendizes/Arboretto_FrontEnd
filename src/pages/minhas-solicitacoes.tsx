@@ -1,12 +1,12 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
-
+import MinhasSolicitacoesCondomino from "../components/minhasSolicitacoes/minhasSolicitacoes";
 const MinhasSolicitacoes = () => {
 
   return (
     <Navbar>
-
+      <MinhasSolicitacoesCondomino/>
     </Navbar>
   );
 };
