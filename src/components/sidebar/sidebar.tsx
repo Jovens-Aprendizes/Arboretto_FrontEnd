@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { ReactNode, useContext } from "react";
 
 import {
   IconButton,
@@ -59,8 +59,10 @@ const PagesMap: Link[] = [
     role: [CargoEnum.INQUILINO, CargoEnum.PROPRIETARIO],
   },
 ];
-
-export default function Navbar({ children }) {
+type NavbarProps = {
+  children: ReactNode;
+};
+export default function Navbar({ children } : NavbarProps) {
   const { user, logout } = useContext(AuthContext);
   const { colorMode, toggleColorMode } = useColorMode();
   const mappedPages = PagesMap.filter((page) =>
@@ -138,7 +140,9 @@ export default function Navbar({ children }) {
           </Flex>
         </HStack>
       </Flex>
-      <Box padding="15px" minH="92vh" w="100vw">{children}</Box>
+      <Box padding="15px" minH="92vh" w="100vw">
+        {children}
+      </Box>
     </Box>
   );
 }

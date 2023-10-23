@@ -130,7 +130,6 @@ const Agendar = () => {
             ></Image>
             <Calendar
               className={styles.reactCalendar}
-              onChange={onChange}
               value={value}
             />
           </Flex>
