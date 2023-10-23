@@ -71,7 +71,7 @@ export default function Navbar({ children }) {
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <Flex
         px={{ base: 4, md: 4 }}
-        height="50"
+        height="8vh"
         alignItems="center"
         bg={useColorModeValue("#C0C9DB", "gray.900")}
         borderBottomWidth="1px"
@@ -85,23 +85,10 @@ export default function Navbar({ children }) {
           </Heading>
         </Flex>
 
-        <Flex flexDirection="row" align="left" gap={6}>
+        <Flex flexDirection="row" align="left" gap="60px">
           {mappedPages.map((page) => (
             <a href={page.path} key={page.name} style={{}}>
-              <Heading
-                marginLeft="50"
-                marginRight="50"
-                textDecoration="none"
-                color="#404245"
-                textAlign="center"
-                fontFamily="Inter"
-                fontSize="25"
-                fontStyle="normal"
-                fontWeight="600"
-                lineHeight="normal"
-              >
-                {page.name}
-              </Heading>
+              <Heading fontSize="lg">{page.name}</Heading>
             </a>
           ))}
         </Flex>
@@ -151,7 +138,7 @@ export default function Navbar({ children }) {
           </Flex>
         </HStack>
       </Flex>
-      <Box padding="15px">{children}</Box>
+      <Box padding="15px" minH="92vh" w="100vw">{children}</Box>
     </Box>
   );
 }
