@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+  useColorMode,
+  useColorModeValue,
   Box,
   Button,
   Flex,
@@ -35,6 +37,8 @@ const formFields = [
 export default function MyForm() {
   const [formData, setFormData] = useState<UserForm>({} as UserForm);
   const [formErrors, setFormErrors] = useState({});
+  const formBackground = useColorModeValue("gray.50", "gray.900");
+  const buttonColor = useColorModeValue("teal", "green");
   const toast = useToast();
 
   const handleSubmit = (e) => {
@@ -83,7 +87,7 @@ export default function MyForm() {
     <FormControl isRequired isInvalid={!!formErrors[name]} w="35%">
       <FormLabel fontSize={14}>{label}</FormLabel>
       <Input
-        backgroundColor="gray.200"
+        backgroundColor={formBackground}
         colorScheme="teal"
         type={type}
         name={name}
@@ -103,14 +107,14 @@ export default function MyForm() {
       borderWidth={1}
       borderRadius="lg"
       boxShadow="lg"
-      bg="gray.50"
+      bg={formBackground}
     >
       <form onSubmit={handleSubmit}>
         <Flex flexDir="column" mb="5%">
           <Flex flexWrap="wrap" justifyContent="space-around" mb="5%">
             {formFields.map((field) => renderField(field))}
           </Flex>
-          <Button colorScheme="teal" alignSelf="end" type="submit">
+          <Button colorScheme={buttonColor} alignSelf="end" type="submit">
             Confirmar
           </Button>
         </Flex>
