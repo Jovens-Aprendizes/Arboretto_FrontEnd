@@ -31,7 +31,7 @@ const SeuFormulario: React.FC = () => {
     <Center>
       <Box width="100%" p={4}>
         <form>
-          <Table variant="striped">
+          <Table variant="unstyled" bg="white">
             <Thead>
               <Tr>
                 <Th>
