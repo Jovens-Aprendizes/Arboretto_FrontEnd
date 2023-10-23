@@ -29,9 +29,12 @@ const SeuFormulario: React.FC = () => {
 
   return (
     <Center>
-      <Box width="100%" p={4}>
+      <Box width="100%">
+      <FormControl marginLeft="3px">
+        <FormLabel>Solicitações de agendamento</FormLabel>
+      </FormControl>
         <form>
-          <Table variant="striped">
+          <Table variant="unstyled" bg="white">
             <Thead>
               <Tr>
                 <Th>
@@ -57,11 +60,6 @@ const SeuFormulario: React.FC = () => {
                 <Th>
                   <FormControl>
                     <FormLabel>Data</FormLabel>
-                  </FormControl>
-                </Th>
-                <Th>
-                  <FormControl>
-                    <FormLabel>Ação</FormLabel>
                   </FormControl>
                 </Th>
               </Tr>
@@ -99,7 +97,7 @@ const SeuFormulario: React.FC = () => {
                 </Td>
                 <Td>
                   <FormControl>
-                    <Textarea placeholder="Insira a descrição" />
+                    <Input placeholder="Insira a descrição" />
                   </FormControl>
                 </Td>
                 <Td>
