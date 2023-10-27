@@ -18,7 +18,7 @@ import {
 import axios from 'axios';
 import { stat } from 'fs';
 
-const SeuFormulario: React.FC = () => {
+const tabelaSolicitacoes: React.FC = () => {
   useEffect(() => {
     fetchData(); // Chama a função de busca de dados quando o componente é montado
   }, []);
@@ -183,7 +183,7 @@ async function fetchData() {
                   </Button>
                 </FormControl>
               </Td>
-                </Tr>              
+                </Tr>
               )}
             </Tbody>
           </Table>
@@ -193,4 +193,4 @@ async function fetchData() {
   );
 };
 
-export default SeuFormulario;
+export default tabelaSolicitacoes;
