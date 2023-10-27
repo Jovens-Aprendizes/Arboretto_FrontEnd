@@ -153,7 +153,7 @@ async function fetchData() {
               </Td>
               <Td>
                 <FormControl>
-                  <Input value={item.spaceId} />
+                  <Input value={item.nomeSpace} />
                 </FormControl>
               </Td>
               <Td>
