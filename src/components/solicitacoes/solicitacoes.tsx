@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FormControl,
   FormLabel,
@@ -15,17 +15,52 @@ import {
   Td,
 } from '@chakra-ui/react';
 
+import axios from 'axios';
+import { stat } from 'fs';
+
 const SeuFormulario: React.FC = () => {
-  const [status, setStatus] = useState('Pendente'); // Status padrão
-  const [acao, setAcao] = useState('');
+  useEffect(() => {
+    fetchData(); // Chama a função de busca de dados quando o componente é montado
+  }, []);
+
+async function fetchData() {
+  try {
+    const response = await axios.get('https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/listar');
+    setDataFromAPI(response.data);
+  } catch (error) {
+    console.error('Erro ao buscar dados da API:', error);
+  }
+}
+
+  
+  const [status, setStatus] = useState(null);
+  const [dataFromAPI, setDataFromAPI] = useState([]);
 
   const handleAcao = (action: string) => {
+    let novoStatus = null;
+
     if (action === 'permitir') {
-      setStatus('Permitido');
+      novoStatus = true;
     } else if (action === 'negar') {
-      setStatus('Negado');
+      novoStatus = false;
     }
+
+    setStatus(novoStatus);
   };
+
+  if (dataFromAPI.status === null) {
+    setStatus('Pendente');
+  }
+  async function AtualizaSolicitacao() {
+    try {
+      const atualizaStatus = await axios.put('https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/atualizar', {
+        status:status
+      })
+      
+    } catch (error) {
+      console.error('Erro ao atualizar o status da solicitação', error)
+    }
+  }
 
   return (
     <Center>
@@ -70,74 +105,86 @@ const SeuFormulario: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>
-                  <FormControl>
-                    <Input
-                      value={status}
-                      readOnly
-                      textAlign="center"
-                      w="105px"
-                      bg={
-                        status === 'Permitido'
-                          ? 'green.500'
-                          : status === 'Negado'
-                          ? 'red.500'
-                          : '#009CA6'
-                      }
-                      color="white"
-                      _hover={{
-                        bg:
-                          status === 'Permitido'
-                            ? 'green.600'
-                            : status === 'Negado'
-                            ? 'red.600'
-                            : '#009CA6',
-                      }}
-                      _focus={{
-                        borderColor: 'transparent',
-                      }}
-                    />
-                  </FormControl>
-                </Td>
-                <Td>
-                  <FormControl>
-                    <Input placeholder="Insira a descrição" />
-                  </FormControl>
-                </Td>
-                <Td>
-                  <FormControl>
-                    <Input placeholder="Nome do condômino" />
-                  </FormControl>
-                </Td>
-                <Td>
-                  <FormControl>
-                    <Input placeholder="Nome do espaço" />
-                  </FormControl>
-                </Td>
-                <Td>
-                  <FormControl>
-                    <Input type="date" />
-                  </FormControl>
-                </Td>
-                <Td>
-                  <FormControl display="flex">
-                    <Button
-                      marginRight="10px"
-                      colorScheme="green"
-                      onClick={() => handleAcao('permitir')}
-                    >
-                      Permitir
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      onClick={() => handleAcao('negar')}
-                    >
-                      Negar
-                    </Button>
-                  </FormControl>
-                </Td>
-              </Tr>
+              {dataFromAPI.map((item, index)=>
+                <Tr key={index}>
+                  <Td>
+                    <FormControl>
+                      <Input
+                          defaultValue={
+                            item.status === null
+                              ? 'Pendente'
+                              : item.status
+                              ? 'Permitido'
+                              : 'Negado'
+                          }
+                          readOnly
+                          textAlign="center"
+                          w="105px"
+                          bg={
+                            item.status
+                              ? 'green.500'
+                              : item.status === false
+                              ? 'red.500'
+                              : '#009CA6'
+                          }
+                          color="white"
+                          _hover={{
+                            bg: item.status
+                              ? 'green.600'
+                              : item.status === false
+                              ? 'red.600'
+                              : '#009CA6',
+                          }}
+                          _focus={{
+                            borderColor: 'transparent',
+                          }}
+                      />
+                </FormControl>
+                  </Td>
+              <Td>
+                <FormControl>
+                  <Input value={item.observacao} />
+                </FormControl>
+              </Td>
+              <Td>
+                <FormControl>
+                  <Input value={item.nomeUsuario} />
+                </FormControl>
+              </Td>
+              <Td>
+                <FormControl>
+                  <Input value={item.spaceId} />
+                </FormControl>
+              </Td>
+              <Td>
+                <FormControl>
+                  <Input value={new Date(item.dataMarcada).toLocaleDateString('pt-BR')} readOnly/>
+                </FormControl>
+              </Td>
+              <Td>
+                <FormControl display="flex">
+                  <Button
+                    marginRight="10px"
+                    colorScheme="green"
+                    onClick={() => {
+                      handleAcao('permitir');
+                      AtualizaSolicitacao();
+                    }}
+                  >
+                    Permitir
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    onClick={() => {handleAcao('negar');
+                    AtualizaSolicitacao();
+                  }}
+                  >
+                    Negar
+                  </Button>
+                </FormControl>
+              </Td>
+                </Tr>              
+              )}
             </Tbody>
           </Table>
         </form>
