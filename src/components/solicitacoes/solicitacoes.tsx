@@ -46,17 +46,25 @@ async function fetchData() {
     }
 
     setStatus(novoStatus);
+
+    AtualizaSolicitacao(novoStatus);
   };
 
-  if (dataFromAPI.status === null) {
-    setStatus('Pendente');
-  }
-  async function AtualizaSolicitacao() {
+  
+  async function AtualizaSolicitacao(novoStatus) {
+    const ids = dataFromAPI.map((item) => {item.id; item.usuarioId; item.spaceId});
     try {
       const atualizaStatus = await axios.put('https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/atualizar', {
-        status:status
-      })
-      
+      ids,  
+      status:novoStatus},
+        {
+          headers:{
+            "Content-Type": 'application/json',
+            "Accept": "*/*"
+          }
+
+        }
+      );
     } catch (error) {
       console.error('Erro ao atualizar o status da solicitação', error)
     }
@@ -68,7 +76,7 @@ async function fetchData() {
       <FormControl marginLeft="3px">
         <FormLabel>Solicitações de agendamento</FormLabel>
       </FormControl>
-        <form>
+        <form >
           <Table variant="unstyled" bg="white">
             <Thead>
               <Tr>
@@ -143,22 +151,22 @@ async function fetchData() {
                   </Td>
               <Td>
                 <FormControl>
-                  <Input value={item.observacao} />
+                  <Input value={item.observacao} border="none" width='350px'/>
                 </FormControl>
               </Td>
               <Td>
                 <FormControl>
-                  <Input value={item.nomeUsuario} />
+                  <Input value={item.nomeUsuario} border="none"/>
                 </FormControl>
               </Td>
               <Td>
                 <FormControl>
-                  <Input value={item.nomeSpace} />
+                  <Input value={item.nomeSpace} border="none"/>
                 </FormControl>
               </Td>
               <Td>
                 <FormControl>
-                  <Input value={new Date(item.dataMarcada).toLocaleDateString('pt-BR')} readOnly/>
+                  <Input border="none" value={new Date(item.dataMarcada).toLocaleDateString('pt-BR')} readOnly/>
                 </FormControl>
               </Td>
               <Td>
@@ -166,18 +174,13 @@ async function fetchData() {
                   <Button
                     marginRight="10px"
                     colorScheme="green"
-                    onClick={() => {
-                      handleAcao('permitir');
-                      AtualizaSolicitacao();
-                    }}
+                    onClick={() => handleAcao('permitir')}
                   >
                     Permitir
                   </Button>
                   <Button
                     colorScheme="red"
-                    onClick={() => {handleAcao('negar');
-                    AtualizaSolicitacao();
-                  }}
+                    onClick={() => handleAcao('negar')}
                   >
                     Negar
                   </Button>
