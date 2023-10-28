@@ -18,13 +18,13 @@ interface Props {
 const SeuFormulario: React.FC<Props> = ({ solicitacoesData }) => {
   const [dataFromAPI] = useState(solicitacoesData);
 
-  const getStatus = (status: boolean | null) => {
-    return status === null ? "Pendente" : status ? "Permitido" : "Negado";
+  const getStatus = (autorizacao: boolean | null) => {
+    return autorizacao === null ? "Pendente" : autorizacao ? "Permitido" : "Negado";
   };
   const getBadgeColor = {
-    Pendente: "yellow",
-    Permitido: "green",
-    Negado: "red",
+    pendente: "yellow",
+    permitido: "green",
+    negado: "red",
   };
 
   return (
@@ -47,9 +47,9 @@ const SeuFormulario: React.FC<Props> = ({ solicitacoesData }) => {
                 <Badge
                   p="5px 10px"
                   borderRadius="8px"
-                  colorScheme={getBadgeColor[getStatus(item.status)]}
+                  colorScheme={getBadgeColor[getStatus(item.autorizacao)]}
                 >
-                  {getStatus(item.status)}
+                  {getStatus(item.autorizacao)}
                 </Badge>
               </Td>
               <Td>{item.observacao}</Td>

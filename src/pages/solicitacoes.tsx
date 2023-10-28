@@ -2,12 +2,16 @@ import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
 import SolicitacoesAdm from "../components/solicitacoes/solicitacoes";
+import axios from "axios";
 
-const Solicitacoes = () => {
+interface Props {
+  solicitacoesData: any;
+}
 
+const Solicitacoes = ({ solicitacoesData }: Props) => {
   return (
     <Navbar>
-      <SolicitacoesAdm/>
+      <SolicitacoesAdm solicitacoesData={solicitacoesData}/>
     </Navbar>
   );
 };
@@ -26,6 +30,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  try {
+
+    const solicitacoesData = await axios
+      .get(
+        `https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/listar`
+      )
+      .then((response) => response.data);
+
+    return {
+      props: {
+        solicitacoesData,
+      },
+    };
+  } catch (error) {
+    console.error("Erro ao buscar dados da API:", error);
+  }
+
+  return {
+    props: {},
+  };
   return {
     props: {},
   };
