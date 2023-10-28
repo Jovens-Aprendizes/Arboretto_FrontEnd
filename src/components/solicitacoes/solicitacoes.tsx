@@ -4,7 +4,6 @@ import {
   FormLabel,
   Input,
   Button,
-  Textarea,
   Box,
   Center,
   Table,
@@ -13,6 +12,7 @@ import {
   Tr,
   Th,
   Td,
+  MenuItem,
 } from '@chakra-ui/react';
 
 import axios from 'axios';
@@ -23,6 +23,7 @@ const tabelaSolicitacoes: React.FC = () => {
     fetchData(); // Chama a função de busca de dados quando o componente é montado
   }, []);
 
+const [dataFromAPI, setDataFromAPI] = useState([]);
 async function fetchData() {
   try {
     const response = await axios.get('https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/listar');
@@ -32,43 +33,66 @@ async function fetchData() {
   }
 }
 
-  
-  const [status, setStatus] = useState(null);
-  const [dataFromAPI, setDataFromAPI] = useState([]);
+async function buscarIDAndAtualizarStatus(item, novoStatus) {
+  try {
+    const response = await axios.get(`https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/filter-id?id=${item.id}`);
+    const dataId = response.data;
 
-  const handleAcao = (action: string) => {
-    let novoStatus = null;
-
-    if (action === 'permitir') {
-      novoStatus = true;
-    } else if (action === 'negar') {
-      novoStatus = false;
+    if (!dataId) {
+      console.error('ID não encontrado na API');
+      return;
     }
 
-    setStatus(novoStatus);
+    await AtualizaSolicitacao(dataId, novoStatus);
 
-    AtualizaSolicitacao(novoStatus);
+  } catch (error) {
+    console.error('Erro ao buscar o ID e atualizar o status:', error);
+  }
+}
+
+async function AtualizaSolicitacao(dataId, novoStatus) {
+  const jsonData = {
+    id: dataId.id,
+    usuarioId: dataId.usuarioId,
+    spaceId: dataId.spaceId,
+    dataMarcada: dataId.dataMarcada,
+    observacao: dataId.observacao,
+    status: novoStatus,
   };
 
-  
-  async function AtualizaSolicitacao(novoStatus) {
-    const ids = dataFromAPI.map((item) => {item.id; item.usuarioId; item.spaceId});
-    try {
-      const atualizaStatus = await axios.put('https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/atualizar', {
-      ids,  
-      status:novoStatus},
-        {
-          headers:{
-            "Content-Type": 'application/json',
-            "Accept": "*/*"
+  try {
+    const atualizaStatus = await axios.put(
+      'https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/atualizar',
+      jsonData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: '*/*',
+        },
+      }
+    );
+        // Atualize o status localmente
+        const teste = dataFromAPI.map(solicitacao => {
+          if (solicitacao.id === dataId.id) {
+            return { ...solicitacao, status: novoStatus };
           }
+          return solicitacao;
+        });
+        setDataFromAPI(teste);
 
-        }
-      );
-    } catch (error) {
-      console.error('Erro ao atualizar o status da solicitação', error)
-    }
+        const updatedData = dataFromAPI.map(item => {
+          if (item.id === dataId.id) {
+            return { ...item, status: novoStatus };
+          }
+          return item;
+        });
+
+    setDataFromAPI(updatedData);
+    console.log('Status atualizado com sucesso:', atualizaStatus.data);
+  } catch (error) {
+    console.error('Erro ao atualizar o status da solicitação', error);
   }
+}
 
   return (
     <Center>
@@ -174,13 +198,13 @@ async function fetchData() {
                   <Button
                     marginRight="10px"
                     colorScheme="green"
-                    onClick={() => handleAcao('permitir')}
+                    onClick={() => {buscarIDAndAtualizarStatus(item, true), fetchData()}}
                   >
                     Permitir
                   </Button>
                   <Button
                     colorScheme="red"
-                    onClick={() => handleAcao('negar')}
+                    onClick={() => {buscarIDAndAtualizarStatus(item, false), fetchData()}}
                   >
                     Negar
                   </Button>
