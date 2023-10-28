@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router from "next/router";
@@ -15,9 +15,9 @@ type User = {
 };
 
 export enum CargoEnum {
-  INQUILINO = 'inquilino',
-  ADMINISTRADOR = 'administrador',
-  PROPRIETARIO = 'proprietário',
+  INQUILINO = "inquilino",
+  ADMINISTRADOR = "administrador",
+  PROPRIETARIO = "proprietário",
 }
 
 export type CargoType = (typeof CargoEnum)[keyof typeof CargoEnum];
@@ -36,8 +36,12 @@ type AuthContextType = {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState<User | null>(null);
+type NavbarProps = {
+  children: ReactNode;
+};
+
+export function AuthProvider({ children }: NavbarProps) {
+  const [user, setUser] = useState<User>({} as User);
 
   const isAuthenticated = !!user;
 
@@ -46,12 +50,17 @@ export function AuthProvider({ children }) {
 
     if (token) {
       axios
-        .post(process.env.NEXT_PUBLIC_AUTH_URL || 'https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario/login', { token: token },{
-          headers:{
-            "Content-Type": 'application/json',
-            "Accept": "*/*"
+        .post(
+          process.env.NEXT_PUBLIC_AUTH_URL ||
+            "https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario/login",
+          { token: token },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "*/*",
+            },
           }
-        })
+        )
         .then((response) => {
           if (response.data.id) {
             setUser(response.data);
@@ -70,12 +79,17 @@ export function AuthProvider({ children }) {
     try {
       const token = btoa(JSON.stringify({ cpf: cpf, senha: senha }));
       axios
-      .post(process.env.NEXT_PUBLIC_AUTH_URL || 'https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario/login', { token: token }, {
-          headers:{
-            "Content-Type": 'application/json',
-            "Accept": "*/*"
+        .post(
+          process.env.NEXT_PUBLIC_AUTH_URL ||
+            "https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario/login",
+          { token: token },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "*/*",
+            },
           }
-        })
+        )
         .then((response) => {
           if (response.data.id) {
             setUser(response.data);

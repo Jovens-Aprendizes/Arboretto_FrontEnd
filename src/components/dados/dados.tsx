@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  useColorMode,
   useColorModeValue,
   Box,
   Button,
@@ -41,12 +40,13 @@ export default function MyForm() {
   const buttonColor = useColorModeValue("teal", "green");
   const toast = useToast();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e : any) => {
     e.preventDefault();
     setFormErrors({});
     const errors = {} as any;
 
     formFields.forEach(({ name }) => {
+      //@ts-ignore
       if (!formData[name]) {
         errors[name] = "Campo obrigatório";
       }
@@ -75,7 +75,7 @@ export default function MyForm() {
     // ... Aqui você colocaria a lógica para enviar os dados do formulário, como uma chamada de API
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -83,18 +83,24 @@ export default function MyForm() {
     }));
   };
 
+  //@ts-ignore
   const renderField = ({ name, label, type }) => (
-    <FormControl isRequired isInvalid={!!formErrors[name]} w="35%">
+    //@ts-ignore
+    <FormControl isRequired isInvalid={!formErrors[name]} w="35%">
       <FormLabel fontSize={14}>{label}</FormLabel>
       <Input
         backgroundColor={formBackground}
         colorScheme="teal"
         type={type}
         name={name}
+        //@ts-ignore
         value={formData[name] || ""}
         onChange={handleChange}
       />
-      {formErrors[name] && (
+      
+      {//@ts-ignore
+      formErrors[name] && (
+        //@ts-ignore
         <FormErrorMessage>{formErrors[name]}</FormErrorMessage>
       )}
     </FormControl>
