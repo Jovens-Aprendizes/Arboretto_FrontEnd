@@ -1,126 +1,66 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useState } from "react";
 import {
-  FormControl,
-  FormLabel,
-  Input,
   Box,
-  Center,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-} from '@chakra-ui/react';
-import axios from 'axios';
+  Heading,
+  Badge,
+} from "@chakra-ui/react";
 
-interface Props { solicitacoesData:any };
+interface Props {
+  solicitacoesData: any;
+}
 
-const SeuFormulario = ({solicitacoesData}:Props) => {
-  const [dataFromAPI, setDataFromAPI] = useState(solicitacoesData);
-  console.log(dataFromAPI);
+const SeuFormulario: React.FC<Props> = ({ solicitacoesData }) => {
+  const [dataFromAPI] = useState(solicitacoesData);
+
+  const getStatus = (status: boolean | null) => {
+    return status === null ? "Pendente" : status ? "Permitido" : "Negado";
+  };
+  const getBadgeColor = {
+    Pendente: "yellow",
+    Permitido: "green",
+    Negado: "red",
+  };
 
   return (
-    <Center>
     <Box width="100%">
-    <FormControl marginLeft="3px">
-      <FormLabel>Solicitações de agendamento</FormLabel>
-    </FormControl>
-      <form >
-        <Table variant="unstyled" bg="white">
-          <Thead>
-            <Tr>
-              <Th>
-                <FormControl>
-                  <FormLabel>Status</FormLabel>
-                </FormControl>
-              </Th>
-              <Th>
-                <FormControl>
-                  <FormLabel>Descrição</FormLabel>
-                </FormControl>
-              </Th>
-              <Th>
-                <FormControl>
-                  <FormLabel>Condômino</FormLabel>
-                </FormControl>
-              </Th>
-              <Th>
-                <FormControl>
-                  <FormLabel>Espaço</FormLabel>
-                </FormControl>
-              </Th>
-              <Th>
-                <FormControl>
-                  <FormLabel>Data</FormLabel>
-                </FormControl>
-              </Th>
+      <Heading mb={4}>Solicitações de agendamento</Heading>
+      <Table variant="unstyled" bg="white">
+        <Thead>
+          <Tr>
+            <Th>Status</Th>
+            <Th>Descrição</Th>
+            <Th>Condômino</Th>
+            <Th>Espaço</Th>
+            <Th>Data</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {dataFromAPI.map((item: any, index: number) => (
+            <Tr key={index}>
+              <Td>
+                <Badge
+                  p="5px 10px"
+                  borderRadius="8px"
+                  colorScheme={getBadgeColor[getStatus(item.status)]}
+                >
+                  {getStatus(item.status)}
+                </Badge>
+              </Td>
+              <Td>{item.observacao}</Td>
+              <Td>{item.nomeUsuario}</Td>
+              <Td>{item.nomeSpace}</Td>
+              <Td>{new Date(item.dataMarcada).toLocaleDateString("pt-BR")}</Td>
             </Tr>
-          </Thead>
-          <Tbody>
-            {dataFromAPI.map((item, index)=>
-              <Tr key={index}>
-                <Td>
-                  <FormControl>
-                    <Input
-                        defaultValue={
-                          item.status === null
-                            ? 'Pendente'
-                            : item.status
-                            ? 'Permitido'
-                            : 'Negado'
-                        }
-                        readOnly
-                        textAlign="center"
-                        w="105px"
-                        bg={
-                          item.status
-                            ? 'green.500'
-                            : item.status === false
-                            ? 'red.500'
-                            : '#009CA6'
-                        }
-                        color="white"
-                        _hover={{
-                          bg: item.status
-                            ? 'green.600'
-                            : item.status === false
-                            ? 'red.600'
-                            : '#009CA6',
-                        }}
-                        _focus={{
-                          borderColor: 'transparent',
-                        }}
-                    />
-              </FormControl>
-                </Td>
-            <Td>
-              <FormControl>
-                <Input value={item.observacao} border="none" width='350px'/>
-              </FormControl>
-            </Td>
-            <Td>
-              <FormControl>
-                <Input value={item.nomeUsuario} border="none"/>
-              </FormControl>
-            </Td>
-            <Td>
-              <FormControl>
-                <Input value={item.nomeSpace} border="none"/>
-              </FormControl>
-            </Td>
-            <Td>
-              <FormControl>
-                <Input border="none" value={new Date(item.dataMarcada).toLocaleDateString('pt-BR')} readOnly/>
-              </FormControl>
-            </Td>
-            </Tr>
-            )}
-          </Tbody>
-        </Table>
-      </form>
+          ))}
+        </Tbody>
+      </Table>
     </Box>
-  </Center>
   );
 };
 
