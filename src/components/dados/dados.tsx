@@ -10,6 +10,7 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 export type UserForm = {
   nome: string;
@@ -18,7 +19,7 @@ export type UserForm = {
   confirmarEmail: string;
   bloco: string;
   senha: string;
-  apto: string;
+  numeroApartamento: string;
   confirmarSenha: string;
 };
 
@@ -28,9 +29,11 @@ const formFields = [
   { name: "email", label: "E-MAIL", type: "email" },
   { name: "confirmarEmail", label: "CONFIRME SEU E-MAIL", type: "email" },
   { name: "bloco", label: "BLOCO", type: "text" },
-  { name: "apto", label: "APTO", type: "text" },
+  { name: "numeroApartamento", label: "APTO", type: "text" },
   { name: "senha", label: "SENHA", type: "password" },
   { name: "confirmarSenha", label: "CONFIRME SUA SENHA", type: "password" },
+  // { name: "dataNascimento", label: "Data d nascimento", type: "date" },
+  // { name: "cargo", label: "Cargo", type: "text" },
 ];
 
 export default function MyForm() {
@@ -40,7 +43,7 @@ export default function MyForm() {
   const buttonColor = useColorModeValue("teal", "green");
   const toast = useToast();
 
-  const handleSubmit = (e : any) => {
+  const handleSubmit = async (e : any) => {
     e.preventDefault();
     setFormErrors({});
     const errors = {} as any;
@@ -72,7 +75,31 @@ export default function MyForm() {
       return;
     }
 
-    // ... Aqui você colocaria a lógica para enviar os dados do formulário, como uma chamada de API
+    const jsonData = {
+      "nome": formData.nome,
+      "senha": formData.senha,
+      "cpf": formData.cpf,
+      "email": formData.email,
+      "numeroApartamento": formData.numeroApartamento,
+      "bloco": formData.bloco
+    }
+
+    try {
+      const reponse = await axios.post('https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario/salvar',
+      jsonData,{
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: '*/*',
+        },
+      });
+      if(reponse.status === 200){
+        alert("Usuário cadastro com sucesso!");
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error('Ocorreu algum erro ao salvar o usuário', error);
+      alert('Erro salvar Usuário');
+    }
   };
 
   const handleChange = (e: any) => {
