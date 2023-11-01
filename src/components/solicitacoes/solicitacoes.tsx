@@ -31,7 +31,7 @@ const tabelaSolicitacoes = ({ solicitacoesData }: Props) => {
 
   async function atualizaSolicitacao(item, novoStatus: string) {
     const data = item;
-    data.autorizacao = novoStatus;
+    data.status = novoStatus;
     try {
       await axios.put(
         "https://api-arboretto-production.up.railway.app/api-arboretto-dev/v1/usuario-space/atualizar",
@@ -43,7 +43,7 @@ const tabelaSolicitacoes = ({ solicitacoesData }: Props) => {
           },
         }
       );
-      await fetchData();
+      window.location.reload()
     } catch (error) {
       console.error("Erro ao atualizar o status da solicitação", error);
     }
@@ -76,9 +76,9 @@ const tabelaSolicitacoes = ({ solicitacoesData }: Props) => {
                 <Badge
                   p="5px 10px"
                   borderRadius="8px"
-                  colorScheme={getBadgeColor[item.autorizacao]}
+                  colorScheme={getBadgeColor[item.status]}
                 >
-                  {item.autorizacao}
+                  {item.status}
                 </Badge>
               </Td>
               <Td>{item.observacao}</Td>
