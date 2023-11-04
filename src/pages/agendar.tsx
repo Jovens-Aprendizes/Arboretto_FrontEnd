@@ -2,34 +2,115 @@ import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
 import {
-  Badge,
   Button,
-  Card,
   Flex,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
   Textarea,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { useState } from "react";
-import Calendar from "react-calendar";
+import { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import styles from "../styles/agendar.module.css";
+import axios from "axios";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
+import { ScheduledEvent, Space, User } from "../types/agendamento";
+import { EspacoCard } from "../components/agendar/components/card";
+import { AgendamentoModal } from "../components/agendar/components/modal";
+import { agendamentoApiService } from "../components/agendar/agendamento.api";
 
-const Agendar = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const [value, onChange] = useState(new Date());
+export const spaces: Space[] = [
+  {
+    name: "Churrasqueira 1",
+    image: "/churras1.jpeg",
+    description: "Churrasqueira que comporta 20 pessoas",
+    id: 1,
+    type: "churrasqueira",
+  },
+  {
+    name: "Churrasqueira 2",
+    image: "/churras2.jpeg",
+    description: "Churrasqueira que comporta 20 pessoas",
+    id: 2,
+    type: "churrasqueira",
+  },
+  {
+    name: "Salão de festas",
+    image: "/salom.jpeg",
+    description: "Salão de festas que comporta 20 pessoas",
+    id: 3,
+    type: "salao",
+  },
+];
+
+interface Props {
+  user: User;
+}
+
+const Agendar = ({ user }: Props) => {
   const formBackground = useColorModeValue("gray.50", "gray.900");
-  const cardBackground = useColorModeValue("gray.100", "gray.600");
+  const toast = useToast();
+  const modalCtrl = useDisclosure();
+  const [selectedSpace, setSelectedSpace] = useState<Space>(spaces[0]);
+  const [busydates, setBusyDates] = useState<Date[]>([] as Date[]);
+  const [date, setDate] = useState<Date>(new Date());
+  const [description, setDescription] = useState("");
+
+  const getAndSetBusyDates = async () => {
+    setBusyDates([] as Date[]);
+    const agendamentos = await agendamentoApiService.fetchScheduledEvents(
+      selectedSpace.id
+    );
+    agendamentos
+      .filter((agendamentos) => agendamentos.autorizacao != "negado")
+      .map((busyDate) => {
+        const date = new Date(busyDate.dataMarcada);
+        setBusyDates((busydates) => [...busydates, date]);
+      });
+  };
+
+  useEffect(() => {
+    getAndSetBusyDates();
+  }, [selectedSpace]);
+
+  const saveSchedulling = async () => {
+    const payload = {
+      usuarioId: user.id,
+      spaceId: selectedSpace.id,
+      dataMarcada: format(date, "yyyy/MM/dd HH:mm:ss"),
+      observacao: "kitazawa é um japones boliviano",
+      status: null,
+    };
+
+    try {
+      await agendamentoApiService.postScheduling(payload);
+      toast({
+        title: "Sucesso!",
+        description: "Solicitação de agendamento enviada",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      setDate(new Date());
+        setDescription("");
+      setTimeout(() => {
+        getAndSetBusyDates();
+      }, 15000);
+    } catch (error) {
+      toast({
+        title: "Erro!",
+        description: "Erro ao enviar solicitação de agendamento",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Navbar>
       <Flex w="100%" h="100%" gap="15px">
@@ -46,65 +127,14 @@ const Agendar = () => {
           flexDir="column"
         >
           <Heading size="md">Espaço lazer</Heading>
-          <Flex
-            flexDir="column"
-            gap="15px"
-            maxH="100%"
-            overflowY="scroll"
-            p="0 5px"
-          >
-            <Card backgroundColor={cardBackground} w="100%" p="15px">
-              <Flex justifyContent="space-between" mb="15px">
-                <Heading size="sm">Churrasqueira 1</Heading>
-                <Badge bg="green.300" p="2px 8px" borderRadius="8px">
-                  Livre
-                </Badge>
-              </Flex>
-              <Text textAlign="justify" overflow="15px" textOverflow="ellipsis">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at
-                urna non arcu mollis sodales. Nam at elementum orci, vel
-                bibendum turpis.
-              </Text>
-            </Card>
-            <Card backgroundColor={cardBackground} w="100%" p="15px">
-              <Flex justifyContent="space-between" mb="15px">
-                <Heading size="sm">Churrasqueira 1</Heading>
-                <Badge bg="green.300" p="2px 8px" borderRadius="8px">
-                  Livre
-                </Badge>
-              </Flex>
-              <Text textAlign="justify" overflow="15px" textOverflow="ellipsis">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at
-                urna non arcu mollis sodales. Nam at elementum orci, vel
-                bibendum turpis.
-              </Text>
-            </Card>
-            <Card backgroundColor={cardBackground} w="100%" p="15px">
-              <Flex justifyContent="space-between" mb="15px">
-                <Heading size="sm">Churrasqueira 1</Heading>
-                <Badge bg="green.300" p="2px 8px" borderRadius="8px">
-                  Livre
-                </Badge>
-              </Flex>
-              <Text textAlign="justify" overflow="15px" textOverflow="ellipsis">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at
-                urna non arcu mollis sodales. Nam at elementum orci, vel
-                bibendum turpis.
-              </Text>
-            </Card>
-            <Card backgroundColor={cardBackground} w="100%" p="15px">
-              <Flex justifyContent="space-between" mb="15px">
-                <Heading size="sm">Churrasqueira 1</Heading>
-                <Badge bg="green.300" p="2px 8px" borderRadius="8px">
-                  Livre
-                </Badge>
-              </Flex>
-              <Text textAlign="justify" overflow="15px" textOverflow="ellipsis">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at
-                urna non arcu mollis sodales. Nam at elementum orci, vel
-                bibendum turpis.
-              </Text>
-            </Card>
+          <Flex flexDir="column" gap="15px" maxH="100%" p="0 5px">
+            {spaces.map((space) => (
+              <EspacoCard
+                space={space}
+                setSelectedSpace={setSelectedSpace}
+                key={space.id}
+              />
+            ))}
           </Flex>
         </Flex>
         <Flex
@@ -119,18 +149,21 @@ const Agendar = () => {
           minH="calc(100vh - 85px)"
           maxH="calc(100vh - 85px)"
         >
-          <Heading size="md">Churrasqueira 1</Heading>
+          <Heading size="md">{selectedSpace.name}</Heading>
           <Flex justifyContent="space-around">
             <Image
               style={{ borderRadius: "8px" }}
-              src="/churrasqueira.jpg"
+              src={selectedSpace.image}
               alt="Churrasqueira de prédio"
               width={300}
               height={300}
             ></Image>
-            <Calendar
-              className={styles.reactCalendar}
-              value={value}
+            <DayPicker
+              locale={ptBR}
+              mode="single"
+              disabled={busydates}
+              onSelect={setDate}
+              selected={date}
             />
           </Flex>
           <Flex justifyContent="space-around">
@@ -138,69 +171,25 @@ const Agendar = () => {
               background="white"
               width="300px"
               placeholder="Escreva aqui as observações da sua reserva"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             ></Textarea>
             <Flex
               width="350px"
               justifyContent="space-between"
               alignItems="flex-end"
             >
-              <Button colorScheme="blue" onClick={() => onOpen()}>
+              <Button colorScheme="blue" onClick={() => modalCtrl.onOpen()}>
                 Termos de reserva
               </Button>
-              <Button onClick={() => onOpen()} colorScheme="teal">
+              <Button onClick={() => modalCtrl.onOpen()} colorScheme="teal">
                 Reservar
               </Button>
-              <Modal size="lg" isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>Termos de reserva Espaço-lazer</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Donec pharetra urna tellus, id varius diam feugiat ac.
-                    Aliquam eget ornare lorem, sit amet mollis magna. Donec
-                    facilisis metus vitae augue auctor laoreet. Ut blandit
-                    ornare fringilla. Sed purus leo, fermentum vitae mauris
-                    eget, vestibulum ultricies mi. Phasellus quis ligula tempor,
-                    fermentum dolor nec, pellentesque velit. Duis eget nunc ex.
-                    Ut pretium augue a justo luctus efficitur. Aenean et ex
-                    imperdiet, ultrices mi nec, eleifend velit. Ut pharetra
-                    sodales turpis, non lobortis urna condimentum et. Donec
-                    vestibulum euismod porta. Maecenas viverra nisi vestibulum
-                    viverra aliquet. Proin tristique elit sed congue elementum.
-                    Pellentesque non feugiat enim, vel congue risus. Integer
-                    quis augue iaculis, viverra ligula vel, consectetur ipsum.
-                    In nec orci enim. Fusce ut euismod diam, eget pharetra
-                    velit. Donec non ex sed ante sagittis tempus et fringilla
-                    neque. Nam dictum, nisl sed lobortis sollicitudin, odio diam
-                    egestas libero, ut volutpat arcu odio facilisis dui. Donec
-                    tristique aliquet lectus ac eleifend. Donec ut lectus in
-                    odio vehicula semper. Morbi in varius libero. Phasellus et
-                    metus ut risus tincidunt tincidunt a ut tellus. Donec
-                    ornare, odio vitae scelerisque pellentesque, metus ligula
-                    tincidunt enim, sit amet tincidunt nulla neque eget diam.
-                    Donec ac laoreet dui. Mauris pretium nisi sit amet magna
-                    pharetra, luctus molestie nibh consequat. Nunc commodo
-                    semper dolor eu tristique. Sed nec volutpat sapien.
-                    Curabitur placerat mauris vitae consequat laoreet. Sed
-                    bibendum odio nisl, et varius felis mollis et. Sed vehicula
-                    porttitor mauris, ut consectetur lorem mattis quis.
-                  </ModalBody>
-                  <ModalFooter display="flex" flexDir="column" gap="15px">
-                    <Text fontWeight="bold">
-                      Confirmo que li e estou de acordo com o temos acima
-                    </Text>
-                    <Flex>
-                      <Button variant="ghost" mr={3} onClick={onClose}>
-                        Fechar
-                      </Button>
-                      <Button padding="15px" colorScheme="teal">
-                        Confirmar
-                      </Button>
-                    </Flex>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
+              <AgendamentoModal
+                espacoType={selectedSpace.type}
+                modalCtrl={modalCtrl}
+                saveFunction={saveSchedulling}
+              />
             </Flex>
           </Flex>
         </Flex>
@@ -221,6 +210,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         permanent: false,
       },
     };
+  }
+
+  try {
+    const user = await agendamentoApiService.fetchUser(token);
+
+    return {
+      props: {
+        user,
+      },
+    };
+  } catch (error) {
+    console.error("Erro ao buscar dados da API:", error);
   }
 
   return {
