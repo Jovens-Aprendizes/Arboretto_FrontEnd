@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import Navbar from "../components/sidebar/sidebar";
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -9,16 +10,15 @@ import {
   useColorModeValue,
   useDisclosure,
   useToast,
+  Image,
 } from "@chakra-ui/react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import axios from "axios";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
-import { ScheduledEvent, Space, User } from "../types/agendamento";
+import { Space, User } from "../types/agendamento";
 import { EspacoCard } from "../components/agendar/components/card";
 import { AgendamentoModal } from "../components/agendar/components/modal";
 import { agendamentoApiService } from "../components/agendar/agendamento.api";
@@ -140,59 +140,62 @@ const Agendar = ({ user }: Props) => {
         </Flex>
         <Flex
           borderRadius="8px"
-          backgroundColor={formBackground}
+          bg={formBackground}
           flexDir="column"
-          gap="15px"
+          gap="4" // usando a escala de espaçamento do Chakra UI
           borderWidth="1px"
           borderColor={useColorModeValue("gray.200", "gray.700")}
-          p="15px"
-          w="75%"
+          p="4" // usando a escala de espaçamento do Chakra UI
+          w={{ base: "100%", md: "75%" }} // responsividade para dispositivos móveis
           minH="calc(100vh - 85px)"
           maxH="calc(100vh - 85px)"
         >
           <Heading size="md">{selectedSpace.name}</Heading>
-          <Flex justifyContent="space-around">
-            <Image
-              style={{ borderRadius: "8px" }}
-              src={selectedSpace.image}
-              alt="Churrasqueira de prédio"
-              width={300}
-              height={300}
-            ></Image>
-            <DayPicker
-              locale={ptBR}
-              mode="single"
-              disabled={busydates}
-              onSelect={setDate}
-              selected={date}
-            />
-          </Flex>
-          <Flex justifyContent="space-around">
-            <Textarea
-              background="white"
-              width="300px"
-              placeholder="Escreva aqui as observações da sua reserva"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            ></Textarea>
-            <Flex
-              width="350px"
-              justifyContent="space-between"
-              alignItems="flex-end"
-            >
-              <Button colorScheme="blue" onClick={() => modalCtrl.onOpen()}>
-                Termos de reserva
-              </Button>
-              <Button onClick={() => modalCtrl.onOpen()} colorScheme="teal">
-                Reservar
-              </Button>
-              <AgendamentoModal
-                espacoType={selectedSpace.type}
-                modalCtrl={modalCtrl}
-                saveFunction={saveSchedulling}
+          <Flex justifyContent="space-around" flexWrap="wrap">
+            <Box pt="4">
+              <Image
+                borderRadius="8px"
+                m="4"
+                boxSize="300px"
+                objectFit="cover"
+                src={selectedSpace.image}
+                alt="Churrasqueira de prédio"
               />
+            </Box>
+            <Flex flexDir="column" align="center" gap="4">
+              <DayPicker
+                locale={ptBR}
+                mode="single"
+                disabled={busydates}
+                onSelect={setDate}
+                selected={date}
+              />
+              <Textarea
+                bg={formBackground}
+                w="300px"
+                placeholder="Escreva aqui as observações da sua reserva"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <Flex
+                w="350px"
+                justifyContent="space-between"
+                alignItems="flex-end"
+              >
+                <Button colorScheme="blue" onClick={() => modalCtrl.onOpen()}>
+                  Termos de reserva
+                </Button>
+                <Button onClick={() => modalCtrl.onOpen()} colorScheme="teal">
+                  Reservar
+                </Button>
+              </Flex>
             </Flex>
           </Flex>
+          <AgendamentoModal
+            espacoType={selectedSpace.type}
+            modalCtrl={modalCtrl}
+            saveFunction={saveSchedulling}
+          />
         </Flex>
       </Flex>
     </Navbar>

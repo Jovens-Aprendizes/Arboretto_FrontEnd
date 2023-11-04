@@ -75,9 +75,9 @@ export default function Navbar({ children } : NavbarProps) {
         px={{ base: 4, md: 4 }}
         height="8vh"
         alignItems="center"
-        bg={useColorModeValue("#C0C9DB", "gray.900")}
+        bg={useColorModeValue("gray.200", "gray.900")}
         borderBottomWidth="1px"
-        borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+        borderBottomColor={useColorModeValue("gray.300", "gray.700")}
         justifyContent={{ base: "space-between" }}
       >
         <Flex flexDirection="row" align="left">
