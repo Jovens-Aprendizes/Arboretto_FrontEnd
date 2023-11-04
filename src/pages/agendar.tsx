@@ -95,8 +95,9 @@ const Agendar = ({ user }: Props) => {
         duration: 9000,
         isClosable: true,
       });
+      setBusyDates((busydates) => [...busydates, date]);
       setDate(new Date());
-        setDescription("");
+      setDescription("");
       setTimeout(() => {
         getAndSetBusyDates();
       }, 15000);
