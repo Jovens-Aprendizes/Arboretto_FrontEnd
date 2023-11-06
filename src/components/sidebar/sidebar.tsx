@@ -34,8 +34,6 @@ const PagesMap: Link[] = [
     path: "/home",
     role: [
       CargoEnum.ADMINISTRADOR,
-      CargoEnum.PROPRIETARIO,
-      CargoEnum.INQUILINO,
     ],
   },
   {
@@ -47,6 +45,11 @@ const PagesMap: Link[] = [
     name: "Solicitações",
     path: "/solicitacoes",
     role: [CargoEnum.ADMINISTRADOR],
+  },
+  {
+    name:"Inicio",
+    path:"/homeUser",
+    role: [CargoEnum.INQUILINO, CargoEnum.PROPRIETARIO],
   },
   {
     name: "Agendar",
