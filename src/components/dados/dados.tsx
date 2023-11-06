@@ -34,7 +34,7 @@ const formFields = [
   { name: "numeroApartamento", label: "APTO", type: "text" },
   { name: "senha", label: "SENHA", type: "password" },
   { name: "confirmarSenha", label: "CONFIRME SUA SENHA", type: "password" },
-  { name: "dataNascimento", label: "Data d nascimento", type: "date" },
+  { name: "dataNascimento", label: "Data de Nascimento", type: "date" },
   // { name: "cargo", type: "hidden" },
 ];
 
