@@ -96,7 +96,11 @@ export function AuthProvider({ children }: NavbarProps) {
             setCookie(undefined, "arboretto-token", token, {
               maxAge: 60 * 60 * 24 * 30, // 30 days
             });
-            Router.push("/home");
+            if (response.data.cargo === CargoEnum.ADMINISTRADOR) {
+              Router.push("/home");
+            } else if (response.data.cargo === CargoEnum.PROPRIETARIO || CargoEnum.INQUILINO) {
+              Router.push("/homeUser");
+            }
           } else {
             alert("login inválido");
           }
