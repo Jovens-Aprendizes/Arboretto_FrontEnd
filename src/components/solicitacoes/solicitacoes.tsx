@@ -54,7 +54,6 @@ const tabelaSolicitacoes = ({ solicitacoesData }: Props) => {
     permitido: "green",
     negado: "red",
   };
-
   return (
     <Box width="100%">
       <Heading>Solicitações de agendamento</Heading>
@@ -78,7 +77,7 @@ const tabelaSolicitacoes = ({ solicitacoesData }: Props) => {
                   borderRadius="8px"
                   colorScheme={getBadgeColor[item.status]}
                 >
-                  {item.status}
+                  {item.status ? item.status : "Pendente"}
                 </Badge>
               </Td>
               <Td>{item.observacao}</Td>
@@ -106,6 +105,57 @@ const tabelaSolicitacoes = ({ solicitacoesData }: Props) => {
       </Table>
     </Box>
   );
+  // return (
+  //   <Box width="100%">
+  //     <Heading>Solicitações de agendamento</Heading>
+  //     <Table variant="unstyled" bg="white">
+  //       <Thead>
+  //         <Tr>
+  //           <Td>Status</Td>
+  //           <Td>Descrição</Td>
+  //           <Td>Condômino</Td>
+  //           <Td>Espaço</Td>
+  //           <Td>Data</Td>
+  //           <Td>Ação</Td>
+  //         </Tr>
+  //       </Thead>
+  //       <Tbody>
+  //         {dataFromAPI.map((item, index) => (
+  //           <Tr key={index}>
+  //             <Td>
+  //               <Badge
+  //                 p="5px 10px"
+  //                 borderRadius="8px"
+  //                 colorScheme={getBadgeColor[item.status]}
+  //               >
+  //                 {item.status}
+  //               </Badge>
+  //             </Td>
+  //             <Td>{item.observacao}</Td>
+  //             <Td>{item.nomeUsuario}</Td>
+  //             <Td>{item.nomeSpace}</Td>
+  //             <Td>{new Date(item.dataMarcada).toLocaleDateString("pt-BR")}</Td>
+  //             <Td>
+  //               <Button
+  //                 marginRight="10px"
+  //                 colorScheme="green"
+  //                 onClick={() => atualizaSolicitacao(item, "permitido")}
+  //               >
+  //                 Permitir
+  //               </Button>
+  //               <Button
+  //                 colorScheme="red"
+  //                 onClick={() => atualizaSolicitacao(item, "negado")}
+  //               >
+  //                 Negar
+  //               </Button>
+  //             </Td>
+  //           </Tr>
+  //         ))}
+  //       </Tbody>
+  //     </Table>
+  //   </Box>
+  // );
 };
 
 export default tabelaSolicitacoes;
