@@ -1,3 +1,4 @@
+import { ApexOptions } from 'apexcharts';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
@@ -36,7 +37,7 @@ const Chart = () => {
     xaxis: {
       categories: [],
     },
-  });
+  } as ApexOptions);
 
   const handleMonthChange = (e) => {
     setSelectedMonth(e.target.value);
