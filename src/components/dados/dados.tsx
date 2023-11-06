@@ -21,6 +21,8 @@ export type UserForm = {
   senha: string;
   numeroApartamento: string;
   confirmarSenha: string;
+  dataNascimento: Date;
+  cargo: string;
 };
 
 const formFields = [
@@ -32,8 +34,8 @@ const formFields = [
   { name: "numeroApartamento", label: "APTO", type: "text" },
   { name: "senha", label: "SENHA", type: "password" },
   { name: "confirmarSenha", label: "CONFIRME SUA SENHA", type: "password" },
-  // { name: "dataNascimento", label: "Data d nascimento", type: "date" },
-  // { name: "cargo", label: "Cargo", type: "text" },
+  { name: "dataNascimento", label: "Data d nascimento", type: "date" },
+  // { name: "cargo", type: "hidden" },
 ];
 
 export default function MyForm() {
@@ -81,7 +83,9 @@ export default function MyForm() {
       "cpf": formData.cpf,
       "email": formData.email,
       "numeroApartamento": formData.numeroApartamento,
-      "bloco": formData.bloco
+      "bloco": formData.bloco,
+      "dataNascimento":formData.dataNascimento,
+      "cargo":"proprietário"
     }
 
     try {
